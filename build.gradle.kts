@@ -61,6 +61,8 @@ tasks.test {
     useJUnitPlatform()
     if (project.hasProperty("skipIT")) {
         exclude("**/*_integTest*")
+    } else if (project.hasProperty("onlyIT")) {
+        include("**/*_integTest*")
     }
     if (project.hasProperty("testAllSupportedGradleVersions")) {
         systemProperty("testAllSupportedGradleVersions", "true")
