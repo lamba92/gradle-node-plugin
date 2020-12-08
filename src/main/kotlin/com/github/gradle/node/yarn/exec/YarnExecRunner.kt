@@ -3,7 +3,7 @@ package com.github.gradle.node.yarn.exec
 import com.github.gradle.node.NodeExtension
 import com.github.gradle.node.exec.ExecConfiguration
 import com.github.gradle.node.exec.ExecRunner
-import com.github.gradle.node.exec.NodeExecConfiguration
+import com.github.gradle.node.exec.NodeExecSpec
 import com.github.gradle.node.npm.proxy.NpmProxy
 import com.github.gradle.node.util.zip
 import com.github.gradle.node.variant.VariantComputer
@@ -13,7 +13,7 @@ import org.gradle.api.provider.Provider
 
 internal class YarnExecRunner {
     private val variantComputer = VariantComputer()
-    fun executeYarnCommand(project: Project, nodeExecConfiguration: NodeExecConfiguration) {
+    fun executeYarnCommand(project: Project, nodeExecSpec: NodeExecSpec) {
         val nodeExtension = NodeExtension[project]
         val nodeDirProvider = variantComputer.computeNodeDir(nodeExtension)
         val yarnDirProvider = variantComputer.computeYarnDir(nodeExtension)
@@ -22,23 +22,23 @@ internal class YarnExecRunner {
         val additionalBinPathProvider =
                 computeAdditionalBinPath(project, nodeExtension, nodeDirProvider, yarnBinDirProvider)
         val execConfiguration = ExecConfiguration(yarnExecProvider.get(),
-                nodeExecConfiguration.command, additionalBinPathProvider.get(),
-                addNpmProxyEnvironment(nodeExtension, nodeExecConfiguration), nodeExecConfiguration.workingDir,
-                nodeExecConfiguration.ignoreExitValue, nodeExecConfiguration.execOverrides)
+                nodeExecSpec.command, additionalBinPathProvider.get(),
+                addNpmProxyEnvironment(nodeExtension, nodeExecSpec), nodeExecSpec.workingDir,
+                nodeExecSpec.ignoreExitValue, nodeExecSpec.execOverrides)
         val execRunner = ExecRunner()
         execRunner.execute(project, execConfiguration)
     }
 
     private fun addNpmProxyEnvironment(nodeExtension: NodeExtension,
-                                       nodeExecConfiguration: NodeExecConfiguration): Map<String, String> {
+                                       nodeExecSpec: NodeExecSpec): Map<String, String> {
         if (nodeExtension.useGradleProxySettings.get()
                 && !NpmProxy.hasProxyConfiguration(System.getenv())) {
             val npmProxyEnvironmentVariables = NpmProxy.computeNpmProxyEnvironmentVariables()
             if (npmProxyEnvironmentVariables.isNotEmpty()) {
-                return nodeExecConfiguration.environment.plus(npmProxyEnvironmentVariables)
+                return nodeExecSpec.environment.plus(npmProxyEnvironmentVariables)
             }
         }
-        return nodeExecConfiguration.environment
+        return nodeExecSpec.environment
     }
 
     private fun computeAdditionalBinPath(project: Project, nodeExtension: NodeExtension,

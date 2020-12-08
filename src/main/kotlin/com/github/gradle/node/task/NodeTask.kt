@@ -1,8 +1,8 @@
 package com.github.gradle.node.task
 
 import com.github.gradle.node.NodePlugin
-import com.github.gradle.node.exec.NodeExecConfiguration
 import com.github.gradle.node.exec.NodeExecRunner
+import com.github.gradle.node.exec.NodeExecSpec
 import org.gradle.api.Action
 import org.gradle.api.DefaultTask
 import org.gradle.api.tasks.*
@@ -50,10 +50,9 @@ open class NodeTask : DefaultTask() {
     fun exec() {
         val currentScript = script.get().asFile
         val command = options.get().plus(currentScript.absolutePath).plus(args.get())
-        val nodeExecConfiguration =
-                NodeExecConfiguration(command, environment.get(), workingDir.asFile.orNull,
+        val nodeExecSpec = NodeExecSpec(command, environment.get(), workingDir.asFile.orNull,
                         ignoreExitValue.get(), execOverrides.orNull)
         val nodeExecRunner = NodeExecRunner()
-        nodeExecRunner.execute(project, nodeExecConfiguration)
+        nodeExecRunner.execute(project, nodeExecSpec)
     }
 }

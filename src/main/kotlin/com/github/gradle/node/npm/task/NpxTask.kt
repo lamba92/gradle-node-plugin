@@ -1,7 +1,7 @@
 package com.github.gradle.node.npm.task
 
 import com.github.gradle.node.NodePlugin
-import com.github.gradle.node.exec.NodeExecConfiguration
+import com.github.gradle.node.exec.NodeExecSpec
 import com.github.gradle.node.npm.exec.NpmExecRunner
 import org.gradle.api.Action
 import org.gradle.api.DefaultTask
@@ -49,7 +49,7 @@ open class NpxTask : DefaultTask() {
         command.orNull?.let { fullCommand.add(it) }
         fullCommand.addAll(args.get())
         val nodeExecConfiguration =
-                NodeExecConfiguration(fullCommand, environment.get(), workingDir.asFile.orNull,
+                NodeExecSpec(fullCommand, environment.get(), workingDir.asFile.orNull,
                         ignoreExitValue.get(), execOverrides.orNull)
         val npmExecRunner = NpmExecRunner()
         npmExecRunner.executeNpxCommand(project, nodeExecConfiguration)

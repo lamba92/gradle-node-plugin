@@ -2,7 +2,7 @@ package com.github.gradle.node.npm.task
 
 import com.github.gradle.node.NodeExtension
 import com.github.gradle.node.NodePlugin
-import com.github.gradle.node.exec.NodeExecConfiguration
+import com.github.gradle.node.exec.NodeExecSpec
 import com.github.gradle.node.npm.exec.NpmExecRunner
 import com.github.gradle.node.task.NodeSetupTask
 import com.github.gradle.node.variant.VariantComputer
@@ -57,7 +57,7 @@ open class NpmSetupTask : DefaultTask() {
     @TaskAction
     fun exec() {
         val command = computeCommand()
-        val nodeExecConfiguration = NodeExecConfiguration(command)
+        val nodeExecConfiguration = NodeExecSpec(command)
         val npmExecRunner = NpmExecRunner()
         npmExecRunner.executeNpmCommand(project, nodeExecConfiguration)
     }

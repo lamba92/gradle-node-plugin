@@ -1,7 +1,7 @@
 package com.github.gradle.node.yarn.task
 
 import com.github.gradle.node.NodePlugin
-import com.github.gradle.node.exec.NodeExecConfiguration
+import com.github.gradle.node.exec.NodeExecSpec
 import com.github.gradle.node.yarn.exec.YarnExecRunner
 import org.gradle.api.Action
 import org.gradle.api.DefaultTask
@@ -50,7 +50,7 @@ open class YarnTask : DefaultTask() {
     fun exec() {
         val command = yarnCommand.get().plus(args.get())
         val nodeExecConfiguration =
-                NodeExecConfiguration(command, environment.get(), workingDir.asFile.orNull,
+                NodeExecSpec(command, environment.get(), workingDir.asFile.orNull,
                         ignoreExitValue.get(), execOverrides.orNull)
         val yarnExecRunner = YarnExecRunner()
         yarnExecRunner.executeYarnCommand(project, nodeExecConfiguration)

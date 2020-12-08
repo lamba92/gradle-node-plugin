@@ -5,7 +5,7 @@ import org.gradle.api.Project
 import java.io.File
 
 internal class ExecRunner {
-    fun execute(project: Project, execConfiguration: ExecConfiguration) {
+    fun execute(project: Project, execConfiguration: ExecConfiguration) =
         project.exec {
             executable = execConfiguration.executable
             args = execConfiguration.args
@@ -14,7 +14,6 @@ internal class ExecRunner {
             workingDir = computeWorkingDir(project, execConfiguration)
             execConfiguration.execOverrides?.execute(this)
         }
-    }
 
     private fun computeEnvironment(execConfiguration: ExecConfiguration): Map<String, String> {
         val execEnvironment = mutableMapOf<String, String>()
